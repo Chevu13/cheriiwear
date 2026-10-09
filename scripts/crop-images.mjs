@@ -10,7 +10,7 @@ const files = readdirSync(SRC);
 // name: [original id, left, top, width, height]
 const crops = {
   "hero-plank": ["810867894", 0, 285, 1088, 800],
-  "plank-crna": ["810867894", 150, 520, 650, 565],
+  "plank-crna": ["810867894", 0, 430, 800, 655],
   "plank-siva": ["810867894", 470, 400, 618, 480],
   "grupa-studio": ["797939421", 0, 268, 775, 1076],
   "lila-sedi": ["797939421", 440, 690, 335, 654],

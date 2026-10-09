@@ -24,6 +24,9 @@
 }
 
 @layer base {
+  :root {
+    --ease: cubic-bezier(0.2, 0.8, 0.2, 1); /* one curve for every motion on the site */
+  }
   html {
     scroll-behavior: smooth;
     scroll-padding-top: 5rem; /* keep focused and anchored content clear of the sticky header */
@@ -78,7 +81,14 @@
     box-shadow:
       inset 0 0 0 4px var(--color-ink),
       inset 0 0 0 5px var(--color-ivory);
-    transition: background-color 0.2s;
+    transition:
+      background-color 0.35s var(--ease),
+      box-shadow 0.35s var(--ease),
+      color 0.35s var(--ease),
+      scale 0.2s var(--ease);
+  }
+  .btn:active {
+    scale: 0.98;
   }
   .btn:hover {
     background: var(--color-cherry);
@@ -199,6 +209,80 @@
     .sheet {
       margin: auto;
     }
+  }
+
+  /* Nav underline draws in from the left */
+  .nav-link {
+    background: linear-gradient(var(--color-cherry), var(--color-cherry)) no-repeat 0 calc(100% - 0.35rem) / 0 2px;
+    transition: background-size 0.4s var(--ease);
+  }
+  .nav-link:hover,
+  .nav-link[aria-current] {
+    background-size: 100% 2px;
+  }
+
+  /* Hero photo settles into place while the headline rises */
+  .hero-img img {
+    animation: settle 1.5s var(--ease) both;
+  }
+  @keyframes settle {
+    from {
+      opacity: 0;
+      scale: 1.07;
+    }
+  }
+  /* Product photos fade in when a product or colour is opened */
+  .photo-in {
+    animation: settle 0.8s var(--ease) both;
+  }
+  .menu-link {
+    animation: rise 0.6s var(--ease) both;
+  }
+  .pop {
+    animation: pop 0.45s var(--ease);
+  }
+  @keyframes pop {
+    from {
+      scale: 1.5;
+    }
+  }
+  .swap {
+    animation: rise 0.35s var(--ease) both;
+  }
+
+  /* Sections ease up as they scroll into view. Scroll-driven, so it costs no JavaScript;
+     browsers without support simply show the content. */
+  @supports (animation-timeline: view()) {
+    .reveal,
+    .reveal-grid > * {
+      animation: reveal linear both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 60%;
+    }
+    .reveal-grid > :nth-child(even) {
+      animation-range: entry 10% entry 85%;
+    }
+  }
+  @keyframes reveal {
+    from {
+      opacity: 0;
+      translate: 0 2.5rem;
+    }
+  }
+
+  /* Accordions open smoothly where the browser can animate to auto height */
+  details {
+    interpolate-size: allow-keywords;
+  }
+  details::details-content {
+    block-size: 0;
+    overflow: clip;
+    transition:
+      block-size 0.4s var(--ease),
+      content-visibility 0.4s allow-discrete;
+  }
+  details[open]::details-content {
+    block-size: auto;
   }
 
   /* The one orchestrated moment: the headline rises on first load */

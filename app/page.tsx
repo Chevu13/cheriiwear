@@ -2,13 +2,13 @@ import Image, { getImageProps } from "next/image";
 import Link from "next/link";
 import { CherryMark } from "@/components/Logo";
 import { ProductCard } from "@/components/ProductCard";
-import { CATEGORIES, COLORS, FABRIC, INSTAGRAM, formatPrice, getProduct, products } from "@/lib/products";
+import { CATEGORIES, COLORS, FABRIC, INSTAGRAM, focal, formatPrice, getProduct, products } from "@/lib/products";
 
-const featured = ["komplet-lila", "komplet-crna", "komplet-siva", "helanke-siva", "top-crna", "helanke-lila"].map(
+const featured = ["komplet-lila", "komplet-crna", "komplet-siva", "top-siva", "helanke-crna", "helanke-lila"].map(
   (slug) => getProduct(slug)!,
 );
 const sets = products.filter((x) => x.style === "komplet");
-const insta = ["logo-cheri", "plank-siva", "lila-reformer", "crna-pilates", "siva-helanke-detalj", "grupa-pod"];
+const insta = ["logo-cheri", "lila-reformer", "plank-crna", "siva-top", "crna-top", "lila-sedi"];
 
 function Hero() {
   const alt = "Devojke u CHÉRI WEAR kompletima tokom treninga";
@@ -18,7 +18,7 @@ function Hero() {
 
   return (
     <section className="md:wrap md:grid md:grid-cols-12 md:items-center md:gap-x-6 md:pt-10 md:pb-24">
-      <picture className="v-bottom block h-[52svh] min-h-[20rem] bg-blush-soft md:order-2 md:col-span-7 md:col-start-6 md:aspect-[1088/800] md:h-auto md:min-h-0">
+      <picture className="hero-img v-bottom block h-[52svh] min-h-[20rem] bg-blush-soft md:order-2 md:col-span-7 md:col-start-6 md:aspect-[1088/800] md:h-auto md:min-h-0">
         <source media="(min-width: 768px)" srcSet={wide.srcSet} sizes={sizes} />
         <img {...tall} alt={alt} className="size-full object-cover object-[50%_20%] md:object-center" />
       </picture>
@@ -58,7 +58,7 @@ export default function Home() {
             ))}
           </nav>
         </div>
-        <div className="grid grid-cols-2 gap-x-3 gap-y-10 md:gap-x-6 md:gap-y-14 lg:grid-cols-3">
+        <div className="reveal-grid grid grid-cols-2 gap-x-3 gap-y-10 md:gap-x-6 md:gap-y-14 lg:grid-cols-3">
           {featured.map((product) => (
             <ProductCard key={product.slug} product={product} />
           ))}
@@ -71,7 +71,7 @@ export default function Home() {
       </section>
 
       <section className="wrap grid gap-y-10 pb-24 md:grid-cols-12 md:gap-x-6 md:pb-36" aria-labelledby="prica-naslov">
-        <div className="relative aspect-[622/772] bg-blush-soft md:col-span-5">
+        <div className="reveal relative aspect-[622/772] bg-blush-soft md:col-span-5">
           <Image
             src="/images/grupa-pod.jpg"
             alt="Tri devojke u CHÉRI WEAR kompletima sede na prostirci za vežbanje"
@@ -80,7 +80,7 @@ export default function Home() {
             className="object-cover"
           />
         </div>
-        <div className="md:col-span-6 md:col-start-7 md:pt-24">
+        <div className="reveal md:col-span-6 md:col-start-7 md:pt-24">
           <h2 id="prica-naslov" className="display text-5xl md:text-7xl">
             Od ideje do tvog omiljenog kompleta.
           </h2>
@@ -101,12 +101,12 @@ export default function Home() {
       </section>
 
       <section className="pb-14 md:pb-36" aria-labelledby="boje-naslov">
-        <div className="wrap mb-8 md:mb-12 md:grid md:grid-cols-12 md:gap-x-6">
+        <div className="reveal wrap mb-8 md:mb-12 md:grid md:grid-cols-12 md:gap-x-6">
           <h2 id="boje-naslov" className="display text-6xl md:col-span-7 md:col-start-6 md:text-8xl">
             Jedan kroj, tri boje
           </h2>
         </div>
-        <ul className="snap-row gap-3 px-[1.125rem] md:wrap md:grid md:grid-cols-3 md:gap-6 md:overflow-visible">
+        <ul className="reveal snap-row gap-3 px-[1.125rem] md:wrap md:grid md:grid-cols-3 md:gap-6 md:overflow-visible">
           {sets.map((set, i) => (
             <li key={set.slug} className={`w-[74%] md:w-auto ${["md:mt-24", "", "md:mt-12"][i]}`}>
               <Link href={`/proizvod/${set.slug}`} className="group block">
@@ -135,7 +135,7 @@ export default function Home() {
       <section className="relative mt-10 md:mt-28" aria-labelledby="srbija-naslov">
         <div className="v-top absolute inset-0 bg-blush" />
         <div className="wrap relative grid gap-y-10 pt-20 pb-20 md:grid-cols-12 md:gap-x-6 md:pt-28 md:pb-28">
-          <div className="md:col-span-6 md:self-center">
+          <div className="reveal md:col-span-6 md:self-center">
             <CherryMark className="size-14 text-cherry" />
             <h2 id="srbija-naslov" className="display mt-5 text-[19vw] text-cherry md:text-[min(9.5vw,9rem)]">
               Sa ljubavlju, u Srbiji.
@@ -159,7 +159,7 @@ export default function Home() {
               </div>
             </dl>
           </div>
-          <div className="relative aspect-[800/1096] bg-blush-soft md:col-span-5 md:col-start-8 md:-mt-52">
+          <div className="reveal relative aspect-[800/1096] bg-blush-soft md:col-span-5 md:col-start-8 md:-mt-52">
             <Image
               src="/images/siva-lopta.jpg"
               alt="Sivi CHÉRI komplet tokom vežbe na pilates lopti"
@@ -172,7 +172,7 @@ export default function Home() {
       </section>
 
       <section className="wrap py-24 md:py-36" aria-labelledby="instagram-naslov">
-        <div className="mb-8 flex flex-wrap items-end justify-between gap-4 md:mb-12">
+        <div className="reveal mb-8 flex flex-wrap items-end justify-between gap-4 md:mb-12">
           <h2 id="instagram-naslov" className="display text-5xl md:text-7xl">
             Follow the Chéri story
           </h2>
@@ -185,7 +185,7 @@ export default function Home() {
           target="_blank"
           rel="noopener noreferrer"
           aria-label="Otvori Instagram profil @cheriiwear"
-          className="grid grid-cols-3 gap-1.5 md:grid-cols-6 md:gap-3"
+          className="reveal grid grid-cols-3 gap-1.5 md:grid-cols-6 md:gap-3"
         >
           {insta.map((name) => (
             <span key={name} className="relative block aspect-square overflow-hidden bg-blush-soft">
@@ -195,6 +195,7 @@ export default function Home() {
                 fill
                 sizes="(min-width: 768px) 16vw, 33vw"
                 className="object-cover transition-opacity duration-300 hover:opacity-85"
+                style={focal(name)}
               />
             </span>
           ))}

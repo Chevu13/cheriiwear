@@ -40,7 +40,7 @@ export function Header() {
               key={href}
               href={href}
               aria-current={current(href)}
-              className="py-2 text-[0.9375rem] font-medium decoration-cherry decoration-2 underline-offset-8 hover:underline aria-[current]:underline"
+              className="nav-link py-2 text-[0.9375rem] font-medium"
             >
               {label}
             </Link>
@@ -54,7 +54,7 @@ export function Header() {
         >
           <ShoppingBag className="size-6" strokeWidth={1.6} aria-hidden="true" />
           {count > 0 ? (
-            <span className="absolute top-1 right-0 grid h-5 min-w-5 place-items-center rounded-full bg-cherry px-1 text-xs font-semibold text-ivory tabular-nums">
+            <span key={count} className="pop absolute top-1 right-0 grid h-5 min-w-5 place-items-center rounded-full bg-cherry px-1 text-xs font-semibold text-ivory tabular-nums">
               {count}
             </span>
           ) : null}
@@ -77,13 +77,14 @@ export function Header() {
             <X className="size-6" aria-hidden="true" />
           </button>
           <nav aria-label="Meni" className="mt-6 flex flex-col">
-            {NAV.map(([href, label]) => (
+            {NAV.map(([href, label], i) => (
               <Link
                 key={href}
                 href={href}
+                style={{ animationDelay: `${80 + i * 60}ms` }}
                 onClick={closeMenu}
                 aria-current={current(href)}
-                className="display border-b border-line py-4 text-5xl aria-[current]:text-cherry"
+                className="menu-link display border-b border-line py-4 text-5xl aria-[current]:text-cherry"
               >
                 {label}
               </Link>

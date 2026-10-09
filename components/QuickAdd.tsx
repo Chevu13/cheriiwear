@@ -24,7 +24,7 @@ export function QuickAdd({ slug, name, parts }: { slug: string; name: string; pa
               ),
             )
           }
-          className="h-10 border-l border-line text-sm font-medium transition-colors first:border-l-0 hover:bg-ink hover:text-ivory"
+          className="h-10 border-l border-line text-sm font-medium transition-colors first:border-l-0 hover:bg-ink hover:text-ivory active:bg-cherry active:text-ivory"
         >
           {size}
         </button>

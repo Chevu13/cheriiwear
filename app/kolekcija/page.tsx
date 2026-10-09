@@ -36,7 +36,7 @@ export default async function Kolekcija({ searchParams }: { searchParams: Promis
               href={href}
               scroll={false}
               aria-current={on ? "page" : undefined}
-              className="px-3 py-4 text-[0.9375rem] font-medium decoration-cherry decoration-2 underline-offset-8 hover:underline aria-[current]:underline"
+              className="nav-link mx-3 py-4 text-[0.9375rem] font-medium"
             >
               {label}
             </Link>
@@ -45,7 +45,7 @@ export default async function Kolekcija({ searchParams }: { searchParams: Promis
         <p className="hidden shrink-0 text-sm text-mute sm:block">Proizvoda: {list.length}</p>
       </div>
 
-      <div className="grid grid-cols-2 gap-x-3 gap-y-10 md:gap-x-6 md:gap-y-14 lg:grid-cols-3">
+      <div className="reveal-grid grid grid-cols-2 gap-x-3 gap-y-10 md:gap-x-6 md:gap-y-14 lg:grid-cols-3">
         {list.map((product, i) => (
           <ProductCard key={product.slug} product={product} priority={i < 2} />
         ))}

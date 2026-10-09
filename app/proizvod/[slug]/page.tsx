@@ -45,15 +45,15 @@ export default async function ProductPage({ params }: Props) {
       <div className="md:wrap md:grid md:grid-cols-12 md:gap-x-10 md:pt-8">
         <div className="snap-row gap-1.5 md:col-span-7 md:grid md:grid-cols-2 md:gap-3 md:overflow-visible">
           {product.photos.map((photo, i) => (
-            <div key={photo.src} className="relative aspect-[4/5] w-[86%] bg-blush-soft md:w-auto">
+            <div key={photo.src} className="relative aspect-[4/5] w-[86%] overflow-hidden bg-blush-soft md:w-auto">
               <Image
                 src={photo.src}
                 alt={photo.alt}
                 fill
                 priority={i === 0}
                 sizes="(min-width: 768px) 30vw, 86vw"
-                className="object-cover"
-                style={{ objectPosition: photo.pos ?? "top" }}
+                className="photo-in object-cover"
+                style={{ objectPosition: photo.pos ?? "top", animationDelay: `${i * 90}ms` }}
               />
             </div>
           ))}
@@ -97,7 +97,7 @@ export default async function ProductPage({ params }: Props) {
                       className="grid size-11 place-items-center"
                     >
                       <span
-                        className="size-8 rounded-full ring-ink ring-offset-[3px] ring-offset-ivory [[aria-current]>&]:ring-1"
+                        className="size-8 rounded-full transition-transform duration-300 hover:scale-110 ring-ink ring-offset-[3px] ring-offset-ivory [[aria-current]>&]:ring-1"
                         style={{ background: COLORS[x.color].hex }}
                       />
                     </Link>
@@ -155,7 +155,7 @@ export default async function ProductPage({ params }: Props) {
         <h2 id="uz-ovo" className="display mb-8 text-5xl md:mb-12 md:text-7xl">
           {product.style === "komplet" ? "Ili komad po komad" : "Upotpuni komplet"}
         </h2>
-        <div className="grid grid-cols-2 gap-x-3 gap-y-10 md:gap-x-6 lg:grid-cols-3">
+        <div className="reveal-grid grid grid-cols-2 gap-x-3 gap-y-10 md:gap-x-6 lg:grid-cols-3">
           {pairs.map((x) => (
             <ProductCard key={x.slug} product={x} />
           ))}

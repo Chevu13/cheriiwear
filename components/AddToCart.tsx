@@ -10,6 +10,7 @@ type Chart = keyof typeof SIZE_GUIDE;
 export function AddToCart({ slug, price, parts }: { slug: string; price: number; parts: readonly string[] }) {
   const [picked, setPicked] = useState<(string | null)[]>(() => parts.map(() => null));
   const [missing, setMissing] = useState(false);
+  const [added, setAdded] = useState(false);
   const [chart, setChart] = useState<Chart>(parts[0] === "" && slug.startsWith("helanke") ? "Helanke" : "Topovi");
   const guide = useRef<HTMLDialogElement>(null);
   const sizesRef = useRef<HTMLDivElement>(null);
@@ -24,6 +25,8 @@ export function AddToCart({ slug, price, parts }: { slug: string; price: number;
       return;
     }
     addToCart(slug, sizeLabel(parts, picked as string[]));
+    setAdded(true);
+    setTimeout(() => setAdded(false), 1800);
   }
 
   return (
@@ -73,7 +76,9 @@ export function AddToCart({ slug, price, parts }: { slug: string; price: number;
       {/* on phones the main action stays under the thumb */}
       <div className="fixed inset-x-0 bottom-0 z-30 border-t border-line bg-ivory px-[1.125rem] pt-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] md:static md:border-0 md:bg-transparent md:p-0">
         <button type="button" className="btn w-full justify-between" onClick={submit}>
-          <span>Dodaj u korpu</span>
+          <span key={String(added)} className="swap" aria-live="polite">
+            {added ? "Dodato u korpu" : "Dodaj u korpu"}
+          </span>
           <span className="tabular-nums">{formatPrice(price)}</span>
         </button>
       </div>

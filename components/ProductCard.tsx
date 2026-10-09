@@ -24,7 +24,7 @@ export function ProductCard({ product, priority }: { product: Product; priority?
           fill
           sizes={sizes}
           priority={priority}
-          className="object-cover"
+          className="object-cover transition-transform duration-700 ease-out group-hover:scale-[1.04]"
           style={{ objectPosition: first.pos ?? "top" }}
         />
         {second ? (
@@ -33,7 +33,7 @@ export function ProductCard({ product, priority }: { product: Product; priority?
             alt=""
             fill
             sizes={sizes}
-            className="hidden object-cover opacity-0 transition-opacity duration-500 group-hover:opacity-100 md:block"
+            className="hidden object-cover opacity-0 transition-[opacity,transform] duration-700 ease-out group-hover:scale-[1.04] group-hover:opacity-100 md:block"
             style={{ objectPosition: second.pos ?? "top" }}
           />
         ) : null}
@@ -59,7 +59,7 @@ export function ProductCard({ product, priority }: { product: Product; priority?
                 className="grid size-9 place-items-center"
               >
                 <span
-                  className="size-5 rounded-full ring-ink ring-offset-2 ring-offset-ivory [[aria-current]>&]:ring-1"
+                  className="size-5 rounded-full transition-transform duration-300 hover:scale-125 ring-ink ring-offset-2 ring-offset-ivory [[aria-current]>&]:ring-1"
                   style={{ background: COLORS[s.color].hex }}
                 />
               </Link>

@@ -43,7 +43,7 @@ export default function Story() {
       <section className="relative" aria-labelledby="materijal">
         <div className="v-top absolute inset-0 bg-blush" />
         <div className="wrap relative grid gap-y-10 py-20 md:grid-cols-12 md:gap-x-6 md:py-32">
-          <div className="relative aspect-[1088/800] bg-blush-soft md:col-span-6">
+          <div className="reveal relative aspect-[1088/800] bg-blush-soft md:col-span-6">
             <Image
               src="/images/hero-plank.jpg"
               alt="Crni i sivi CHÉRI komplet tokom vežbe na prostirci"
@@ -52,7 +52,7 @@ export default function Story() {
               className="object-cover"
             />
           </div>
-          <div className="md:col-span-5 md:col-start-8 md:self-center">
+          <div className="reveal md:col-span-5 md:col-start-8 md:self-center">
             <h2 id="materijal" className="display text-5xl md:text-7xl">
               Šta smo izabrali
             </h2>
@@ -73,10 +73,10 @@ export default function Story() {
       </section>
 
       <section className="wrap grid gap-y-12 py-20 md:grid-cols-12 md:gap-x-6 md:py-32" aria-labelledby="nega">
-        <h2 id="nega" className="display text-5xl md:col-span-5 md:text-7xl">
+        <h2 id="nega" className="reveal display text-5xl md:col-span-5 md:text-7xl">
           Kako da ti helanke duže traju
         </h2>
-        <div className="grid gap-10 sm:grid-cols-2 md:col-span-6 md:col-start-7">
+        <div className="reveal grid gap-10 sm:grid-cols-2 md:col-span-6 md:col-start-7">
           <div>
             <h3 className="mb-3 text-lg font-semibold">Peri ih pažljivo</h3>
             <ol className="list-decimal space-y-2 pl-5 leading-relaxed">
