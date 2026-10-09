@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { CATEGORIES, INSTAGRAM } from "@/lib/products";
+import { COLORS, INSTAGRAM, products } from "@/lib/products";
 import { Logo } from "./Logo";
 
 const item = "block py-1.5 text-ivory/80 hover:text-ivory";
@@ -16,9 +16,9 @@ export function Footer() {
         </div>
         <nav aria-label="Kupovina">
           <h2 className="mb-3 font-semibold">Kupovina</h2>
-          {Object.entries(CATEGORIES).map(([id, name]) => (
-            <Link key={id} href={`/kolekcija?kategorija=${id}`} className={item}>
-              {name}
+          {products.map((x) => (
+            <Link key={x.slug} href={`/proizvod/${x.slug}`} className={item}>
+              Komplet, {COLORS[x.color].name.toLowerCase()}
             </Link>
           ))}
         </nav>

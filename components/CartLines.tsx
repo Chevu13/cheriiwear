@@ -21,7 +21,6 @@ export function CartLines({ lines }: { lines: Line[] }) {
                 fill
                 sizes="80px"
                 className="object-cover"
-                style={{ objectPosition: product.photos[0].pos ?? "top" }}
               />
             </div>
             <div className="flex min-w-0 flex-1 flex-col">

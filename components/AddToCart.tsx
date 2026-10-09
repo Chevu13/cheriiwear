@@ -11,7 +11,7 @@ export function AddToCart({ slug, price, parts }: { slug: string; price: number;
   const [picked, setPicked] = useState<(string | null)[]>(() => parts.map(() => null));
   const [missing, setMissing] = useState(false);
   const [added, setAdded] = useState(false);
-  const [chart, setChart] = useState<Chart>(parts[0] === "" && slug.startsWith("helanke") ? "Helanke" : "Topovi");
+  const [chart, setChart] = useState<Chart>("Topovi");
   const guide = useRef<HTMLDialogElement>(null);
   const sizesRef = useRef<HTMLDivElement>(null);
   const ready = picked.every(Boolean);

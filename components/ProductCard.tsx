@@ -25,7 +25,6 @@ export function ProductCard({ product, priority }: { product: Product; priority?
           sizes={sizes}
           priority={priority}
           className="object-cover transition-transform duration-700 ease-out group-hover:scale-[1.04]"
-          style={{ objectPosition: first.pos ?? "top" }}
         />
         {second ? (
           <Image
@@ -34,7 +33,6 @@ export function ProductCard({ product, priority }: { product: Product; priority?
             fill
             sizes={sizes}
             className="hidden object-cover opacity-0 transition-[opacity,transform] duration-700 ease-out group-hover:scale-[1.04] group-hover:opacity-100 md:block"
-            style={{ objectPosition: second.pos ?? "top" }}
           />
         ) : null}
       </Link>
@@ -49,7 +47,6 @@ export function ProductCard({ product, priority }: { product: Product; priority?
       </div>
       <ul className="mt-1.5 -ml-1.5 flex" aria-label="Boje">
         {products
-          .filter((x) => x.style === product.style)
           .map((s) => (
             <li key={s.slug}>
               <Link

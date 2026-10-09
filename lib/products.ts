@@ -12,22 +12,14 @@ export const COLORS = {
   lila: { name: "Lila", hex: "#c4a9b9" },
 } as const;
 
-export const CATEGORIES = {
-  kompleti: "Kompleti",
-  topovi: "Topovi",
-  helanke: "Helanke",
-} as const;
-
 export type ColorId = keyof typeof COLORS;
-export type CategoryId = keyof typeof CATEGORIES;
-type StyleId = "komplet" | "top" | "helanke";
-type Photo = { src: string; alt: string; pos?: string };
+type StyleId = "komplet";
+type Photo = { src: string; alt: string };
 
 const STYLES: Record<
   StyleId,
   {
     name: string; // DEMO naziv
-    category: CategoryId;
     price: number; // DEMO cena u RSD
     parts: string[]; // delovi za koje se bira veličina
     description: string;
@@ -35,97 +27,28 @@ const STYLES: Record<
 > = {
   komplet: {
     name: "Chéri komplet",
-    category: "kompleti",
     price: 8900,
     parts: ["Top", "Helanke"],
     description:
       "Top i helanke u istoj boji, sa belom paspul trakom i izvezenom trešnjom. Veličinu biraš posebno za top, posebno za helanke.",
   },
-  top: {
-    name: "Chéri top",
-    category: "topovi",
-    price: 3900,
-    parts: [""],
-    description:
-      "Sportski top sa oblim izrezom i belom paspul trakom duž ivica. Nosi se uz helanke iste boje ili sam.",
-  },
-  helanke: {
-    name: "Chéri helanke",
-    category: "helanke",
-    price: 5500,
-    parts: [""],
-    description:
-      "Helanke sa preklopljenim V pojasom, belom paspul trakom i izvezenom trešnjom na kuku.",
-  },
 };
 
-// Focal point per photograph (CSS object-position), so a crop can be tuned in one place.
-// Anything not listed is anchored to the top, which keeps faces in frame on tall shots.
-export const FOCUS: Record<string, string> = {
-  "grupa-studio": "50% 20%",
-  "hero-plank": "50% 50%",
-  "plank-crna": "0% 50%",
-  "plank-siva": "8% 50%",
-  "crna-pilates": "50% 50%",
-  "siva-pilates": "62% 50%",
-  "lila-reformer": "65% 50%",
-  "lila-reformer-portret": "50% 15%",
-  "lila-sedi": "50% 8%",
-  "siva-top": "50% 6%",
-  "siva-helanke-detalj": "60% 50%",
-  "crna-helanke": "50% 50%",
-};
-export const focal = (name: string) => ({ objectPosition: FOCUS[name] ?? "50% 0%" });
+const p = (file: string, alt: string): Photo => ({ src: `/img/${file}.jpg`, alt });
 
-const p = (file: string, alt: string): Photo => ({
-  src: `/images/${file}.jpg`,
-  alt,
-  pos: FOCUS[file],
-});
-
-// The first photo is the product card; no two cards share a photograph.
+// Photos in public/img are hand-picked by the brand and shown whole, never cropped.
 const PHOTOS: Record<`${StyleId}-${ColorId}`, Photo[]> = {
   "komplet-crna": [
-    p("crna-pilates", "Crni Chéri komplet u pilates studiju"),
-    p("crna-studio", "Crni Chéri komplet, top i helanke sa belom trakom"),
-    p("plank-crna", "Crni komplet tokom vežbe na prostirci"),
-    p("grupa-studio", "Chéri kompleti u tri boje u studiju"),
+    p("studio-crna", "Crni Chéri komplet u pilates studiju. Kreirane da traju, mekan i prijatan osećaj na koži"),
+    p("objava-poliamid", "Crni Chéri komplet na pilates reformeru. Poliamid: mekan, elastičan, prijatan za kožu"),
   ],
   "komplet-siva": [
-    p("siva-pilates", "Sivi Chéri komplet u pilates studiju"),
-    p("siva-lopta", "Sivi komplet tokom vežbe na pilates lopti"),
-    p("siva-studio", "Sivi komplet, top i helanke sa belom trakom"),
-    p("plank-siva", "Sivi komplet tokom vežbe na prostirci"),
+    p("studio-siva", "Sivi Chéri komplet u pilates studiju. 78% poliamid, 22% elastin, elastični u sva 4 smera"),
+    p("objava-mali-podsetnik", "Sivi Chéri komplet tokom vežbe na pilates lopti"),
   ],
   "komplet-lila": [
-    p("lila-reformer-portret", "Lila Chéri komplet na pilates reformeru"),
-    p("lila-studio", "Lila komplet, top i helanke sa belom trakom"),
-    p("lila-sedi", "Lila komplet, pogled spreda"),
-    p("grupa-pod", "Chéri kompleti u tri boje"),
-  ],
-  "top-crna": [
-    p("plank-crna", "Crni Chéri top tokom vežbe na prostirci"),
-    p("crna-top", "Crni top sa belom trakom"),
-  ],
-  "top-siva": [
-    p("plank-siva", "Sivi Chéri top tokom vežbe na prostirci"),
-    p("siva-top", "Sivi top sa belom trakom"),
-  ],
-  "top-lila": [
-    p("lila-top", "Lila Chéri top sa belom trakom"),
-    p("lila-sedi", "Lila top, pogled spreda"),
-  ],
-  "helanke-crna": [
-    p("crna-helanke-studio", "Crne Chéri helanke, detalj pojasa i izvezene trešnje"),
-    p("crna-helanke", "Crne helanke sa V pojasom u pilates studiju"),
-  ],
-  "helanke-siva": [
-    p("siva-helanke-detalj", "Sive Chéri helanke, detalj izvezene trešnje"),
-    p("siva-helanke", "Sive helanke sa V pojasom"),
-  ],
-  "helanke-lila": [
-    p("lila-helanke", "Lila Chéri helanke sa V pojasom"),
-    p("lila-reformer", "Lila helanke na pilates reformeru"),
+    p("studio-lila", "Lila Chéri komplet u pilates studiju. Materijali koji oblikuju telo, nisu providni"),
+    p("lila-reformer", "Lila Chéri komplet na pilates reformeru"),
   ],
 };
 

@@ -3,6 +3,13 @@ import Image from "next/image";
 import Link from "next/link";
 import { CARE, FABRIC } from "@/lib/products";
 
+// The brand's own care posts, shown whole; the tips are repeated in the alt text.
+const carePosts = [
+  ["objava-helanke-duze-traju", "Kako da ti helanke duže traju? 3 saveta."],
+  ["objava-peri-pazljivo", `Peri ih pažljivo: ${CARE.do.join(", ")}.`],
+  ["objava-izbegavaj", `Izbegavaj ovo: ${CARE.avoid.join(", ")}.`],
+];
+
 export const metadata: Metadata = {
   title: "Naša priča",
   description: "CHÉRI WEAR je mali domaći brend sportske odeće, ručno izrađene u Srbiji.",
@@ -28,10 +35,10 @@ export default function Story() {
             <p className="font-semibold">Made to move. Made to feel confident.</p>
           </div>
         </div>
-        <div className="relative aspect-[775/1076] bg-blush-soft md:col-span-5 md:mt-20">
+        <div className="relative aspect-[4/5] bg-blush-soft md:col-span-5 md:mt-20">
           <Image
-            src="/images/grupa-studio.jpg"
-            alt="Tri devojke u CHÉRI WEAR kompletima u pilates studiju"
+            src="/img/objava-sta-smo-izabrali.jpg"
+            alt="Šta smo mi izabrali? Za naš prvi sportski komad odabrali smo Vita Zodiaco materijal, sa fokusom na rastegljivost, prijatan osećaj i funkcionalnost tokom pokreta."
             fill
             priority
             sizes="(min-width: 768px) 40vw, 100vw"
@@ -43,16 +50,16 @@ export default function Story() {
       <section className="relative" aria-labelledby="materijal">
         <div className="v-top absolute inset-0 bg-blush" />
         <div className="wrap relative grid gap-y-10 py-20 md:grid-cols-12 md:gap-x-6 md:py-32">
-          <div className="reveal relative aspect-[1088/800] bg-blush-soft md:col-span-6">
+          <div className="reveal relative aspect-[4/5] bg-blush-soft md:col-span-5">
             <Image
-              src="/images/hero-plank.jpg"
-              alt="Crni i sivi CHÉRI komplet tokom vežbe na prostirci"
+              src="/img/objava-poliamid.jpg"
+              alt="Poliamid (PA): mekan i gladak na dodir, veoma elastičan, prijatan za kožu, dobro prati pokrete tela, često se koristi za kvalitetnu sportsku odeću."
               fill
-              sizes="(min-width: 768px) 48vw, 100vw"
+              sizes="(min-width: 768px) 40vw, 100vw"
               className="object-cover"
             />
           </div>
-          <div className="reveal md:col-span-5 md:col-start-8 md:self-center">
+          <div className="reveal md:col-span-6 md:col-start-7 md:self-center">
             <h2 id="materijal" className="display text-5xl md:text-7xl">
               Šta smo izabrali
             </h2>
@@ -72,29 +79,18 @@ export default function Story() {
         </div>
       </section>
 
-      <section className="wrap grid gap-y-12 py-20 md:grid-cols-12 md:gap-x-6 md:py-32" aria-labelledby="nega">
-        <h2 id="nega" className="reveal display text-5xl md:col-span-5 md:text-7xl">
+      <section className="py-20 md:py-32" aria-labelledby="nega">
+        <h2 id="nega" className="reveal wrap display mb-8 text-5xl md:mb-12 md:text-7xl">
           Kako da ti helanke duže traju
         </h2>
-        <div className="reveal grid gap-10 sm:grid-cols-2 md:col-span-6 md:col-start-7">
-          <div>
-            <h3 className="mb-3 text-lg font-semibold">Peri ih pažljivo</h3>
-            <ol className="list-decimal space-y-2 pl-5 leading-relaxed">
-              {CARE.do.map((tip) => (
-                <li key={tip}>{tip}</li>
-              ))}
-            </ol>
-          </div>
-          <div>
-            <h3 className="mb-3 text-lg font-semibold">Izbegavaj ovo</h3>
-            <ol className="list-decimal space-y-2 pl-5 leading-relaxed">
-              {CARE.avoid.map((tip) => (
-                <li key={tip}>{tip}</li>
-              ))}
-            </ol>
-          </div>
-        </div>
-        <div className="md:col-span-12">
+        <ul className="reveal snap-row gap-3 px-[1.125rem] md:wrap md:grid md:grid-cols-3 md:gap-6 md:overflow-visible">
+          {carePosts.map(([name, alt]) => (
+            <li key={name} className="relative aspect-[4/5] w-[82%] bg-blush-soft md:w-auto">
+              <Image src={`/img/${name}.jpg`} alt={alt} fill sizes="(min-width: 768px) 30vw, 82vw" className="object-cover" />
+            </li>
+          ))}
+        </ul>
+        <div className="wrap mt-12">
           <Link href="/kolekcija" className="btn">
             Istraži kolekciju
           </Link>

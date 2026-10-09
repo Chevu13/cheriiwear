@@ -11,11 +11,11 @@ const instrument = Instrument_Sans({ subsets: ["latin", "latin-ext"], variable: 
 export const metadata: Metadata = {
   title: { default: "CHÉRI WEAR — Made to move", template: "%s | CHÉRI WEAR" },
   description:
-    "CHÉRI WEAR je domaći brend sportske odeće. Helanke, topovi i kompleti za pilates i trening, ručno izrađeni u Srbiji.",
+    "CHÉRI WEAR je domaći brend sportske odeće. Kompleti za pilates i trening, ručno izrađeni u Srbiji.",
   openGraph: {
     title: "CHÉRI WEAR — Made to move",
     description: "Activewear koji prati svaki tvoj pokret. Ručno izrađeno u Srbiji.",
-    images: ["/images/grupa-studio.jpg"],
+    images: ["/img/grupa-studio.jpg"],
     locale: "sr_RS",
     type: "website",
   },

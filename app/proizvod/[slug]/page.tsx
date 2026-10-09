@@ -5,7 +5,7 @@ import { notFound } from "next/navigation";
 import { Plus } from "lucide-react";
 import { AddToCart } from "@/components/AddToCart";
 import { ProductCard } from "@/components/ProductCard";
-import { CARE, CATEGORIES, COLORS, FABRIC, formatPrice, getProduct, products } from "@/lib/products";
+import { CARE, COLORS, FABRIC, formatPrice, getProduct, products } from "@/lib/products";
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -36,9 +36,7 @@ export default async function ProductPage({ params }: Props) {
   if (!product) notFound();
 
   const color = COLORS[product.color];
-  const otherColors = products.filter((x) => x.style === product.style);
-  // same colour, other pieces: the rest of the outfit
-  const pairs = products.filter((x) => x.color === product.color && x.style !== product.style);
+  const others = products.filter((x) => x.slug !== product.slug);
 
   return (
     <div className="pb-24 md:pb-0">
@@ -53,7 +51,7 @@ export default async function ProductPage({ params }: Props) {
                 priority={i === 0}
                 sizes="(min-width: 768px) 30vw, 86vw"
                 className="photo-in object-cover"
-                style={{ objectPosition: photo.pos ?? "top", animationDelay: `${i * 90}ms` }}
+                style={{ animationDelay: `${i * 90}ms` }}
               />
             </div>
           ))}
@@ -71,10 +69,6 @@ export default async function ProductPage({ params }: Props) {
               <Link href="/kolekcija" className="hover:text-ink">
                 Kolekcija
               </Link>
-              <span aria-hidden="true"> / </span>
-              <Link href={`/kolekcija?kategorija=${product.category}`} className="hover:text-ink">
-                {CATEGORIES[product.category]}
-              </Link>
             </nav>
             <h1 className="display mt-3 text-6xl md:text-7xl">{product.name}</h1>
             <p className="mt-3 flex items-baseline gap-3 text-xl">
@@ -87,7 +81,7 @@ export default async function ProductPage({ params }: Props) {
                 Boja <span className="ml-2 font-normal text-mute">{color.name}</span>
               </p>
               <ul className="mt-2 -ml-1 flex gap-1">
-                {otherColors.map((x) => (
+                {products.map((x) => (
                   <li key={x.slug}>
                     <Link
                       href={`/proizvod/${x.slug}`}
@@ -153,10 +147,10 @@ export default async function ProductPage({ params }: Props) {
 
       <section className="wrap py-20 md:py-32" aria-labelledby="uz-ovo">
         <h2 id="uz-ovo" className="display mb-8 text-5xl md:mb-12 md:text-7xl">
-          {product.style === "komplet" ? "Ili komad po komad" : "Upotpuni komplet"}
+          Druge boje
         </h2>
         <div className="reveal-grid grid grid-cols-2 gap-x-3 gap-y-10 md:gap-x-6 lg:grid-cols-3">
-          {pairs.map((x) => (
+          {others.map((x) => (
             <ProductCard key={x.slug} product={x} />
           ))}
         </div>

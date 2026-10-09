@@ -5,8 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start",
-    "images": "node scripts/crop-images.mjs"
+    "start": "next start"
   },
   "dependencies": {
     "lucide-react": "^1.54.0",

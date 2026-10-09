@@ -27,9 +27,9 @@ export default function Contact() {
           ))}
         </dl>
       </div>
-      <div className="relative aspect-square bg-blush-soft md:col-span-5 md:col-start-8">
+      <div className="relative aspect-[4/5] bg-blush-soft md:col-span-5 md:col-start-8">
         <Image
-          src="/images/lila-reformer.jpg"
+          src="/img/lila-reformer.jpg"
           alt="Lila CHÉRI komplet na pilates reformeru"
           fill
           priority
