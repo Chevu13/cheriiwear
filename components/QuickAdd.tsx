@@ -1,16 +1,26 @@
 "use client";
 
 import { addToCart } from "@/lib/cart";
-import { SIZES, sizeLabel } from "@/lib/products";
+import { sizeLabel } from "@/lib/products";
 
-export function QuickAdd({ slug, name, parts }: { slug: string; name: string; parts: readonly string[] }) {
+export function QuickAdd({
+  slug,
+  name,
+  parts,
+  sizes,
+}: {
+  slug: string;
+  name: string;
+  parts: readonly string[];
+  sizes: readonly string[];
+}) {
   return (
     <div
-      className="mt-3 grid grid-cols-5 border border-line"
+      className="mt-3 flex border border-line"
       role="group"
       aria-label={`Brzo dodaj u korpu: ${name}`}
     >
-      {SIZES.map((size) => (
+      {sizes.map((size) => (
         <button
           key={size}
           type="button"
@@ -24,7 +34,7 @@ export function QuickAdd({ slug, name, parts }: { slug: string; name: string; pa
               ),
             )
           }
-          className="h-10 border-l border-line text-sm font-medium transition-colors first:border-l-0 hover:bg-ink hover:text-ivory active:bg-cherry active:text-ivory"
+          className="h-10 flex-1 border-l border-line text-sm font-medium transition-colors first:border-l-0 hover:bg-ink hover:text-ivory active:bg-cherry active:text-ivory"
         >
           {size}
         </button>

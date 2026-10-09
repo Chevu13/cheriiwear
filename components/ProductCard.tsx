@@ -66,7 +66,7 @@ export function ProductCard({ product, priority }: { product: Product; priority?
             </li>
           ))}
       </ul>
-      <QuickAdd slug={product.slug} name={product.name} parts={product.parts} />
+      <QuickAdd slug={product.slug} name={product.name} parts={product.parts} sizes={product.sizes} />
     </article>
   );
 }

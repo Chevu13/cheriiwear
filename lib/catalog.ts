@@ -4,15 +4,18 @@
 // kept in this browser's localStorage and fall back to the defaults in products.ts.
 // shortcut: no backend, so edits are per browser; move to a database before launch.
 import { useSyncExternalStore } from "react";
-import { COLORS, products as defaults, type Product } from "./products";
+import { COLORS, SIZES, products as defaults, type Product } from "./products";
 
-const KEY = "cheri-catalog-v1";
+const KEY = "cheri-catalog-v2";
 const listeners = new Set<() => void>();
 let catalog: Product[] | null = null;
 
 const isText = (v: unknown, max: number): v is string => typeof v === "string" && v.length <= max;
+// a file from public/img, or a photo uploaded in the admin (resized JPEG, see ProductEditor)
+const isPhotoSrc = (v: unknown) =>
+  isText(v, 700_000) && (/^\/img\/[a-z0-9-]+\.jpg$/.test(v) || /^data:image\/jpeg;base64,[A-Za-z0-9+/=]+$/.test(v));
 
-// localStorage is user-editable: accept only well-formed products with local images
+// localStorage is user-editable: accept only well-formed products
 function isProduct(x: unknown): x is Product {
   const v = x as Product;
   return (
@@ -27,12 +30,15 @@ function isProduct(x: unknown): x is Product {
     v.price >= 0 &&
     v.price <= 1_000_000 &&
     isText(v.description, 600) &&
+    Array.isArray(v.sizes) &&
+    v.sizes.length > 0 &&
+    v.sizes.every((size) => (SIZES as readonly string[]).includes(size)) &&
     Array.isArray(v.parts) &&
     v.parts.length > 0 &&
     v.parts.every((part) => isText(part, 20)) &&
     Array.isArray(v.photos) &&
     v.photos.length > 0 &&
-    v.photos.every((photo) => /^\/img\/[a-z0-9-]+\.jpg$/.test(photo?.src) && isText(photo.alt, 300))
+    v.photos.every((photo) => isPhotoSrc(photo?.src) && isText(photo.alt, 300))
   );
 }
 
@@ -47,14 +53,16 @@ function load(): Product[] {
   }
 }
 
+/** Stores the catalog; false (and nothing changes) when the browser has no room left for it. */
 function set(next: Product[]) {
-  catalog = next;
   try {
     localStorage.setItem(KEY, JSON.stringify(next));
   } catch {
-    // storage unavailable: edits last until the tab closes
+    return false;
   }
+  catalog = next;
   listeners.forEach((fn) => fn());
+  return true;
 }
 
 function subscribe(fn: () => void) {
@@ -70,15 +78,17 @@ export const useCatalog = () => useSyncExternalStore(subscribe, snapshot, () => 
 export const findProduct = (slug: string) =>
   (typeof window === "undefined" ? defaults : snapshot()).find((x) => x.slug === slug);
 
-/** Adds the product, or replaces the one with the same slug. Returns false if it is not valid. */
-export function saveProduct(product: Product) {
-  if (!isProduct(product)) return false;
+/** Adds the product, or replaces the one with the same slug. */
+export function saveProduct(product: Product): "ok" | "invalid" | "full" {
+  if (!isProduct(product)) return "invalid";
   const list = snapshot();
-  set(list.some((x) => x.slug === product.slug) ? list.map((x) => (x.slug === product.slug ? product : x)) : [...list, product]);
-  return true;
+  const next = list.some((x) => x.slug === product.slug)
+    ? list.map((x) => (x.slug === product.slug ? product : x))
+    : [...list, product];
+  return set(next) ? "ok" : "full";
 }
 
-export const deleteProduct = (slug: string) => set(snapshot().filter((x) => x.slug !== slug));
+export const deleteProduct = (slug: string) => void set(snapshot().filter((x) => x.slug !== slug));
 
 export function resetCatalog() {
   catalog = defaults;

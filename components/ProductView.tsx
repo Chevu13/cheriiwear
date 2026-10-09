@@ -107,7 +107,13 @@ export function ProductView({ slug }: { slug: string }) {
             </div>
 
             <div className="mt-6">
-              <AddToCart key={product.slug} slug={product.slug} price={product.price} parts={product.parts} />
+              <AddToCart
+                key={product.slug}
+                slug={product.slug}
+                price={product.price}
+                parts={product.parts}
+                sizes={product.sizes}
+              />
             </div>
 
             <div className="mt-8 border-t border-line">

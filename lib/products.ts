@@ -19,6 +19,7 @@ export type Product = {
   name: string; // DEMO naziv
   color: ColorId;
   price: number; // DEMO cena u RSD
+  sizes: string[]; // dostupne veličine, podskup SIZES
   parts: string[]; // delovi za koje se bira veličina; [""] znači jedna veličina
   description: string;
   photos: Photo[];
@@ -29,6 +30,7 @@ const p = (file: string, alt: string): Photo => ({ src: `/img/${file}.jpg`, alt 
 const SET = {
   name: "Chéri komplet",
   price: 8900,
+  sizes: [...SIZES],
   parts: ["Top", "Helanke"],
   description:
     "Top i helanke u istoj boji, sa belom paspul trakom i izvezenom trešnjom. Veličinu biraš posebno za top, posebno za helanke.",
@@ -65,18 +67,6 @@ export const products: Product[] = [
     ],
   },
 ];
-
-// Fotografije koje se u demo adminu mogu izabrati kao glavna slika artikla.
-export const PHOTO_LIBRARY = [
-  "studio-crna",
-  "studio-siva",
-  "studio-lila",
-  "objava-poliamid",
-  "lila-reformer",
-  "objava-helanke-duze-traju",
-  "objava-sta-smo-izabrali",
-  "grupa-studio",
-].map((file) => `/img/${file}.jpg`);
 
 export const getProduct = (slug: string) => products.find((x) => x.slug === slug);
 

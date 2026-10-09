@@ -3,11 +3,21 @@
 import { useRef, useState } from "react";
 import { X } from "lucide-react";
 import { addToCart } from "@/lib/cart";
-import { SIZES, SIZE_GUIDE, formatPrice, sizeLabel } from "@/lib/products";
+import { SIZE_GUIDE, formatPrice, sizeLabel } from "@/lib/products";
 
 type Chart = keyof typeof SIZE_GUIDE;
 
-export function AddToCart({ slug, price, parts }: { slug: string; price: number; parts: readonly string[] }) {
+export function AddToCart({
+  slug,
+  price,
+  parts,
+  sizes,
+}: {
+  slug: string;
+  price: number;
+  parts: readonly string[];
+  sizes: readonly string[];
+}) {
   const [picked, setPicked] = useState<(string | null)[]>(() => parts.map(() => null));
   const [missing, setMissing] = useState(false);
   const [added, setAdded] = useState(false);
@@ -46,7 +56,7 @@ export function AddToCart({ slug, price, parts }: { slug: string; price: number;
               ) : null}
             </div>
             <div className="clear-both grid grid-cols-5 gap-2">
-              {SIZES.map((size) => (
+              {sizes.map((size) => (
                 <label
                   key={size}
                   className="grid h-12 place-items-center border border-line bg-paper font-medium transition-colors hover:border-ink has-checked:border-ink has-checked:bg-ink has-checked:text-ivory has-focus-visible:outline-2 has-focus-visible:outline-offset-2 has-focus-visible:outline-cherry"

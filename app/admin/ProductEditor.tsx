@@ -5,23 +5,43 @@ import Image from "next/image";
 import { X } from "lucide-react";
 import { dropFromCart } from "@/lib/cart";
 import { deleteProduct, newSlug, resetCatalog, saveProduct, useCatalog } from "@/lib/catalog";
-import { COLORS, PHOTO_LIBRARY, formatPrice, type ColorId, type Product } from "@/lib/products";
+import { COLORS, SIZES, formatPrice, type ColorId, type Product } from "@/lib/products";
 
-const SET_PARTS = ["Top", "Helanke"];
 const label = "mb-1.5 block text-sm font-medium";
 const option =
   "grid h-11 place-items-center border border-line bg-paper px-3 text-sm font-medium transition-colors hover:border-ink has-checked:border-ink has-checked:bg-ink has-checked:text-ivory has-focus-visible:outline-2 has-focus-visible:outline-offset-2 has-focus-visible:outline-cherry";
+
+const ERRORS = {
+  invalid: "Proveri unos: naziv je obavezan, cena je ceo broj od 0 do 1.000.000, a bar jedna veličina mora biti izabrana.",
+  full: "Nema više mesta u pregledaču za slike. Obriši neki artikal sa otpremljenom slikom pa pokušaj ponovo.",
+  photo: "Dodaj sliku artikla.",
+  file: "Ovaj fajl ne može da se učita kao slika. Izaberi JPG ili PNG.",
+};
+
+/** Shrinks an uploaded photo to at most 1000px on its longer side, as a JPEG data URL. Never crops. */
+async function toJpeg(file: File) {
+  const bitmap = await createImageBitmap(file);
+  const scale = Math.min(1, 1000 / Math.max(bitmap.width, bitmap.height));
+  const canvas = document.createElement("canvas");
+  canvas.width = Math.round(bitmap.width * scale);
+  canvas.height = Math.round(bitmap.height * scale);
+  canvas.getContext("2d")!.drawImage(bitmap, 0, 0, canvas.width, canvas.height);
+  bitmap.close();
+  return canvas.toDataURL("image/jpeg", 0.85);
+}
 
 export function ProductEditor() {
   const catalog = useCatalog();
   const dialog = useRef<HTMLDialogElement>(null);
   // null = closed, "new" = adding, otherwise the product being edited
   const [editing, setEditing] = useState<Product | "new" | null>(null);
+  const [photo, setPhoto] = useState(""); // main photo shown in the form
   const [error, setError] = useState("");
   const current = editing === "new" || editing === null ? null : editing;
 
   function open(target: Product | "new") {
     setEditing(target);
+    setPhoto(target === "new" ? "" : target.photos[0].src);
     setError("");
     dialog.current?.showModal();
   }
@@ -32,31 +52,39 @@ export function ProductEditor() {
     dropFromCart(product.slug);
   }
 
+  async function pickFile(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    try {
+      setPhoto(await toJpeg(file));
+      setError("");
+    } catch {
+      setError(ERRORS.file);
+    }
+  }
+
   function submit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
+    if (!photo) return setError(ERRORS.photo);
     const form = new FormData(e.currentTarget);
     const name = String(form.get("name") ?? "").trim();
     const color = String(form.get("color")) as ColorId;
-    const src = String(form.get("photo"));
-    const price = Number(form.get("price"));
     const photos =
-      current && current.photos[0].src === src
+      current && current.photos[0].src === photo
         ? current.photos
-        : [{ src, alt: `${name}, ${COLORS[color]?.name.toLowerCase()}` }, ...(current?.photos.filter((x) => x.src !== src) ?? [])];
+        : [{ src: photo, alt: `${name}, ${COLORS[color]?.name.toLowerCase()}` }, ...(current?.photos.slice(1) ?? [])];
 
-    const ok = saveProduct({
+    const result = saveProduct({
       slug: current?.slug ?? newSlug(name, color),
       name,
       color,
-      price,
-      parts: form.get("parts") === "komplet" ? SET_PARTS : [""],
+      price: Number(form.get("price")),
+      sizes: SIZES.filter((size) => form.getAll("sizes").includes(size)),
+      parts: current?.parts ?? [""],
       description: String(form.get("description") ?? "").trim(),
       photos,
     });
-    if (!ok) {
-      setError("Proveri unos: naziv je obavezan, a cena je ceo broj od 0 do 1.000.000.");
-      return;
-    }
+    if (result !== "ok") return setError(ERRORS[result]);
     dialog.current?.close();
   }
 
@@ -94,8 +122,8 @@ export function ProductEditor() {
               <span className="min-w-0 flex-1 basis-40">
                 <span className="block truncate font-semibold">{product.name}</span>
                 <span className="flex items-center gap-2 text-sm text-mute">
-                  <span className="size-3 rounded-full" style={{ background: COLORS[product.color].hex }} />
-                  {COLORS[product.color].name}
+                  <span className="size-3 shrink-0 rounded-full" style={{ background: COLORS[product.color].hex }} />
+                  {COLORS[product.color].name}, {product.sizes.join(" ")}
                 </span>
               </span>
               <span className="tabular-nums">{formatPrice(product.price)}</span>
@@ -116,10 +144,7 @@ export function ProductEditor() {
           ))}
         </ul>
       )}
-      <p className="mt-3 text-sm text-mute">
-        Izmene se odmah vide u prodavnici, ali samo u ovom pregledaču. Slika se bira iz postojećih fotografija; na
-        pravom sajtu se ovde otprema nova.
-      </p>
+      <p className="mt-3 text-sm text-mute">Izmene se odmah vide u prodavnici, ali samo u ovom pregledaču.</p>
 
       <dialog
         ref={dialog}
@@ -186,29 +211,22 @@ export function ProductEditor() {
             </fieldset>
 
             <fieldset>
-              <legend className={label}>Izbor veličine</legend>
-              <div className="grid grid-cols-2 gap-2">
-                <label className={option}>
-                  <input
-                    type="radio"
-                    name="parts"
-                    value="komplet"
-                    className="sr-only"
-                    defaultChecked={!current || current.parts.length > 1}
-                  />
-                  Top i helanke posebno
-                </label>
-                <label className={option}>
-                  <input
-                    type="radio"
-                    name="parts"
-                    value="komad"
-                    className="sr-only"
-                    defaultChecked={!!current && current.parts.length === 1}
-                  />
-                  Jedna veličina
-                </label>
+              <legend className={label}>Dostupne veličine</legend>
+              <div className="grid grid-cols-5 gap-2">
+                {SIZES.map((size) => (
+                  <label key={size} className={option}>
+                    <input
+                      type="checkbox"
+                      name="sizes"
+                      value={size}
+                      className="sr-only"
+                      defaultChecked={current ? current.sizes.includes(size) : true}
+                    />
+                    {size}
+                  </label>
+                ))}
               </div>
+              <p className="mt-1.5 text-sm text-mute">Kupac može da izabere samo označene veličine.</p>
             </fieldset>
 
             <label className="block">
@@ -216,27 +234,29 @@ export function ProductEditor() {
               <textarea name="description" rows={3} maxLength={600} defaultValue={current?.description} className="field" />
             </label>
 
-            <fieldset>
-              <legend className={label}>Glavna slika</legend>
-              <div className="grid grid-cols-4 gap-2">
-                {PHOTO_LIBRARY.map((src, i) => (
-                  <label
-                    key={src}
-                    className="relative block aspect-[4/5] bg-blush-soft outline-offset-2 outline-cherry has-checked:outline-3 has-focus-visible:outline-3"
-                  >
-                    <input
-                      type="radio"
-                      name="photo"
-                      value={src}
-                      className="sr-only"
-                      aria-label={`Slika ${i + 1}`}
-                      defaultChecked={current ? current.photos[0].src === src : i === 0}
-                    />
-                    <Image src={src} alt="" fill sizes="25vw" className="object-cover" />
-                  </label>
-                ))}
+            <div>
+              <span className={label} id="slika-oznaka">
+                Slika
+              </span>
+              <div className="flex items-start gap-4">
+                <span className="relative block aspect-[4/5] w-24 shrink-0 border border-line bg-blush-soft">
+                  {photo ? <Image src={photo} alt="Izabrana slika artikla" fill sizes="96px" className="object-cover" /> : null}
+                </span>
+                <div className="min-w-0">
+                  <input
+                    type="file"
+                    accept="image/*"
+                    aria-labelledby="slika-oznaka"
+                    onChange={pickFile}
+                    className="block w-full text-sm file:mr-3 file:h-11 file:cursor-pointer file:border file:border-ink file:bg-transparent file:px-4 file:font-medium"
+                  />
+                  <p className="mt-2 text-sm text-mute">
+                    Uspravna slika odnosa 4:5, preporuka 1080 × 1350 px, JPG ili PNG. Slika drugog odnosa biće odsečena po
+                    ivicama okvira.
+                  </p>
+                </div>
               </div>
-            </fieldset>
+            </div>
 
             <p role="alert" className="min-h-6 text-cherry">
               {error}
