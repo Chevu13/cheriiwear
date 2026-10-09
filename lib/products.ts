@@ -44,7 +44,7 @@ const PHOTOS: Record<`${StyleId}-${ColorId}`, Photo[]> = {
   ],
   "komplet-siva": [
     p("studio-siva", "Sivi Chéri komplet u pilates studiju. 78% poliamid, 22% elastin, elastični u sva 4 smera"),
-    p("objava-mali-podsetnik", "Sivi Chéri komplet tokom vežbe na pilates lopti"),
+    p("objava-helanke-duze-traju", "Sivi i crni Chéri komplet tokom vežbe na prostirci. Kako da ti helanke duže traju?"),
   ],
   "komplet-lila": [
     p("studio-lila", "Lila Chéri komplet u pilates studiju. Materijali koji oblikuju telo, nisu providni"),
