@@ -13,56 +13,70 @@ export const COLORS = {
 } as const;
 
 export type ColorId = keyof typeof COLORS;
-type StyleId = "komplet";
-type Photo = { src: string; alt: string };
-
-const STYLES: Record<
-  StyleId,
-  {
-    name: string; // DEMO naziv
-    price: number; // DEMO cena u RSD
-    parts: string[]; // delovi za koje se bira veličina
-    description: string;
-  }
-> = {
-  komplet: {
-    name: "Chéri komplet",
-    price: 8900,
-    parts: ["Top", "Helanke"],
-    description:
-      "Top i helanke u istoj boji, sa belom paspul trakom i izvezenom trešnjom. Veličinu biraš posebno za top, posebno za helanke.",
-  },
+export type Photo = { src: string; alt: string };
+export type Product = {
+  slug: string;
+  name: string; // DEMO naziv
+  color: ColorId;
+  price: number; // DEMO cena u RSD
+  parts: string[]; // delovi za koje se bira veličina; [""] znači jedna veličina
+  description: string;
+  photos: Photo[];
 };
 
 const p = (file: string, alt: string): Photo => ({ src: `/img/${file}.jpg`, alt });
 
-// Photos in public/img are hand-picked by the brand and shown whole, never cropped.
-const PHOTOS: Record<`${StyleId}-${ColorId}`, Photo[]> = {
-  "komplet-crna": [
-    p("studio-crna", "Crni Chéri komplet u pilates studiju. Kreirane da traju, mekan i prijatan osećaj na koži"),
-    p("objava-poliamid", "Crni Chéri komplet na pilates reformeru. Poliamid: mekan, elastičan, prijatan za kožu"),
-  ],
-  "komplet-siva": [
-    p("studio-siva", "Sivi Chéri komplet u pilates studiju. 78% poliamid, 22% elastin, elastični u sva 4 smera"),
-    p("objava-helanke-duze-traju", "Sivi i crni Chéri komplet tokom vežbe na prostirci. Kako da ti helanke duže traju?"),
-  ],
-  "komplet-lila": [
-    p("studio-lila", "Lila Chéri komplet u pilates studiju. Materijali koji oblikuju telo, nisu providni"),
-    p("lila-reformer", "Lila Chéri komplet na pilates reformeru"),
-  ],
+const SET = {
+  name: "Chéri komplet",
+  price: 8900,
+  parts: ["Top", "Helanke"],
+  description:
+    "Top i helanke u istoj boji, sa belom paspul trakom i izvezenom trešnjom. Veličinu biraš posebno za top, posebno za helanke.",
 };
 
-export const products = (Object.keys(STYLES) as StyleId[]).flatMap((style) =>
-  (Object.keys(COLORS) as ColorId[]).map((color) => ({
-    slug: `${style}-${color}`,
-    style,
-    color,
-    ...STYLES[style],
-    photos: PHOTOS[`${style}-${color}`],
-  })),
-);
+// Početni artikli. U demo adminu mogu da se menjaju, brišu i dodaju (lib/catalog.ts).
+// Photos in public/img are hand-picked by the brand and shown whole, never cropped.
+export const products: Product[] = [
+  {
+    slug: "komplet-crna",
+    color: "crna",
+    ...SET,
+    photos: [
+      p("studio-crna", "Crni Chéri komplet u pilates studiju. Kreirane da traju, mekan i prijatan osećaj na koži"),
+      p("objava-poliamid", "Crni Chéri komplet na pilates reformeru. Poliamid: mekan, elastičan, prijatan za kožu"),
+    ],
+  },
+  {
+    slug: "komplet-siva",
+    color: "siva",
+    ...SET,
+    photos: [
+      p("studio-siva", "Sivi Chéri komplet u pilates studiju. 78% poliamid, 22% elastin, elastični u sva 4 smera"),
+      p("objava-helanke-duze-traju", "Sivi i crni Chéri komplet tokom vežbe na prostirci. Kako da ti helanke duže traju?"),
+    ],
+  },
+  {
+    slug: "komplet-lila",
+    color: "lila",
+    ...SET,
+    photos: [
+      p("studio-lila", "Lila Chéri komplet u pilates studiju. Materijali koji oblikuju telo, nisu providni"),
+      p("lila-reformer", "Lila Chéri komplet na pilates reformeru"),
+    ],
+  },
+];
 
-export type Product = (typeof products)[number];
+// Fotografije koje se u demo adminu mogu izabrati kao glavna slika artikla.
+export const PHOTO_LIBRARY = [
+  "studio-crna",
+  "studio-siva",
+  "studio-lila",
+  "objava-poliamid",
+  "lila-reformer",
+  "objava-helanke-duze-traju",
+  "objava-sta-smo-izabrali",
+  "grupa-studio",
+].map((file) => `/img/${file}.jpg`);
 
 export const getProduct = (slug: string) => products.find((x) => x.slug === slug);
 

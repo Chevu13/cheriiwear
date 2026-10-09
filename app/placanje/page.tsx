@@ -5,7 +5,8 @@ import Link from "next/link";
 import { CartLines } from "@/components/CartLines";
 import { cartTotal, clearCart, useCart, useHydrated, type Line } from "@/lib/cart";
 import { CUSTOMER_FIELDS, addOrder, type Customer } from "@/lib/orders";
-import { COLORS, formatPrice, getProduct } from "@/lib/products";
+import { findProduct } from "@/lib/catalog";
+import { COLORS, formatPrice } from "@/lib/products";
 
 function Field({ label, className = "", ...input }: { label: string } & React.ComponentProps<"input">) {
   return (
@@ -44,7 +45,8 @@ export default function Checkout() {
         </p>
         <ul className="mt-8 divide-y divide-line border-y border-line">
           {placed.map((line) => {
-            const product = getProduct(line.slug)!;
+            const product = findProduct(line.slug);
+            if (!product) return null;
             return (
               <li key={line.slug + line.size} className="flex justify-between gap-4 py-3">
                 <span>

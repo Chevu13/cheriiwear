@@ -1,7 +1,7 @@
 "use client";
 
 import { useSyncExternalStore } from "react";
-import { getProduct } from "./products";
+import { findProduct } from "./catalog";
 
 export type Line = { slug: string; size: string; qty: number };
 
@@ -17,7 +17,7 @@ function load(): Line[] {
     // localStorage is user-editable: keep only lines that match the catalog.
     return raw.filter(
       (l): l is Line =>
-        !!getProduct(l?.slug) && typeof l.size === "string" && Number.isInteger(l.qty) && l.qty > 0 && l.qty < 100,
+        !!findProduct(l?.slug) && typeof l.size === "string" && Number.isInteger(l.qty) && l.qty > 0 && l.qty < 100,
     );
   } catch {
     return EMPTY;
@@ -73,6 +73,9 @@ export function setQty(slug: string, size: string, qty: number) {
 
 export const clearCart = () => set(EMPTY);
 
+/** Removes a product that no longer exists (deleted in the admin) from the cart. */
+export const dropFromCart = (slug: string) => set(snapshot().filter((l) => l.slug !== slug));
+
 const noop = () => () => {};
 /** False during SSR and hydration, so cart-dependent screens don't flash "empty". */
 export const useHydrated = () =>
@@ -83,4 +86,4 @@ export const useHydrated = () =>
   );
 
 export const cartCount = (ls: Line[]) => ls.reduce((n, l) => n + l.qty, 0);
-export const cartTotal = (ls: Line[]) => ls.reduce((n, l) => n + l.qty * (getProduct(l.slug)?.price ?? 0), 0);
+export const cartTotal = (ls: Line[]) => ls.reduce((n, l) => n + l.qty * (findProduct(l.slug)?.price ?? 0), 0);

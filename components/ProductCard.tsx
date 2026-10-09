@@ -1,6 +1,9 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
-import { COLORS, formatPrice, products, type Product } from "@/lib/products";
+import { useCatalog } from "@/lib/catalog";
+import { COLORS, formatPrice, type Product } from "@/lib/products";
 import { QuickAdd } from "./QuickAdd";
 
 const sizes = "(min-width: 1024px) 30vw, 50vw";
@@ -8,6 +11,7 @@ const sizes = "(min-width: 1024px) 30vw, 50vw";
 export function ProductCard({ product, priority }: { product: Product; priority?: boolean }) {
   const [first, second] = product.photos;
   const href = `/proizvod/${product.slug}`;
+  const variants = useCatalog().filter((x) => x.name === product.name);
 
   return (
     <article>
@@ -46,8 +50,7 @@ export function ProductCard({ product, priority }: { product: Product; priority?
         <p className="tabular-nums">{formatPrice(product.price)}</p>
       </div>
       <ul className="mt-1.5 -ml-1.5 flex" aria-label="Boje">
-        {products
-          .map((s) => (
+        {variants.map((s) => (
             <li key={s.slug}>
               <Link
                 href={`/proizvod/${s.slug}`}

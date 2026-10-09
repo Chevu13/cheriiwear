@@ -3,13 +3,14 @@
 import Image from "next/image";
 import { Minus, Plus } from "lucide-react";
 import { setQty, type Line } from "@/lib/cart";
-import { COLORS, formatPrice, getProduct } from "@/lib/products";
+import { findProduct } from "@/lib/catalog";
+import { COLORS, formatPrice } from "@/lib/products";
 
 export function CartLines({ lines }: { lines: Line[] }) {
   return (
     <ul className="divide-y divide-line">
       {lines.map((line) => {
-        const product = getProduct(line.slug);
+        const product = findProduct(line.slug);
         if (!product) return null;
         const label = `${product.name}, ${COLORS[product.color].name}, ${line.size}`;
         return (

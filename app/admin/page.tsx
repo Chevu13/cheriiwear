@@ -6,7 +6,9 @@ import Link from "next/link";
 import { ChevronDown } from "lucide-react";
 import { useHydrated } from "@/lib/cart";
 import { STATUSES, clearOrders, removeOrder, seedOrders, setStatus, useOrders, type Status } from "@/lib/orders";
-import { COLORS, SIZES, formatPrice, getProduct, products, type ColorId } from "@/lib/products";
+import { findProduct } from "@/lib/catalog";
+import { COLORS, formatPrice, type ColorId } from "@/lib/products";
+import { ProductEditor } from "./ProductEditor";
 
 const when = new Intl.DateTimeFormat("sr-Latn-RS", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" });
 const statusIds = Object.keys(STATUSES) as Status[];
@@ -32,7 +34,7 @@ export default function Admin() {
   const sold = Object.fromEntries(Object.keys(COLORS).map((c) => [c, 0])) as Record<ColorId, number>;
   for (const order of orders) {
     for (const line of order.lines) {
-      const product = getProduct(line.slug);
+      const product = findProduct(line.slug);
       if (product) sold[product.color] += line.qty;
     }
   }
@@ -132,7 +134,7 @@ export default function Admin() {
                         <div className="grid gap-6 pb-6 md:grid-cols-2">
                           <ul className="divide-y divide-line border-y border-line">
                             {order.lines.map((line) => {
-                              const product = getProduct(line.slug);
+                              const product = findProduct(line.slug);
                               return (
                                 <li key={line.slug + line.size} className="flex items-center gap-3 py-2.5">
                                   {product ? (
@@ -192,7 +194,7 @@ export default function Admin() {
             )}
           </section>
 
-          <div className="space-y-3">
+          <div>
             <section className="border border-line bg-ivory p-4 md:p-6" aria-labelledby="boje">
               <h2 id="boje" className="display text-3xl">
                 Prodaja po boji
@@ -215,35 +217,13 @@ export default function Admin() {
               </ul>
             </section>
 
-            <section className="border border-line bg-ivory p-4 md:p-6" aria-labelledby="proizvodi">
-              <h2 id="proizvodi" className="display text-3xl">
-                Proizvodi
-              </h2>
-              <ul className="mt-3 divide-y divide-line">
-                {products.map((product) => (
-                  <li key={product.slug} className="flex items-center gap-3 py-3">
-                    <span className="relative aspect-[4/5] w-12 shrink-0 bg-blush-soft">
-                      <Image src={product.photos[0].src} alt="" fill sizes="48px" className="object-cover" />
-                    </span>
-                    <span className="min-w-0 flex-1">
-                      <Link href={`/proizvod/${product.slug}`} className="font-semibold hover:text-cherry">
-                        {product.name}, {COLORS[product.color].name.toLowerCase()}
-                      </Link>
-                      <span className="block text-sm text-mute">{SIZES.join(" · ")}</span>
-                    </span>
-                    <span className="shrink-0 tabular-nums">{formatPrice(product.price)}</span>
-                  </li>
-                ))}
-              </ul>
-              <p className="mt-3 text-sm text-mute">
-                Na pravom sajtu ovde se menjaju cene, slike, veličine i stanje na lageru.
-              </p>
-            </section>
           </div>
         </div>
 
+        <ProductEditor />
+
         <p className="mt-6 max-w-2xl text-sm text-mute">
-          Demo: porudžbine se čuvaju samo u ovom pregledaču i nema prijave. Pravi admin ima lozinku, a porudžbine stižu
+          Demo: porudžbine i izmene artikala čuvaju se samo u ovom pregledaču i nema prijave. Pravi admin ima lozinku, a porudžbine stižu
           sa svih uređaja kupaca.
         </p>
       </div>

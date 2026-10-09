@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { COLORS, INSTAGRAM, products } from "@/lib/products";
+import { INSTAGRAM } from "@/lib/products";
 import { Logo } from "./Logo";
 
 const item = "block py-1.5 text-ivory/80 hover:text-ivory";
@@ -16,11 +16,12 @@ export function Footer() {
         </div>
         <nav aria-label="Kupovina">
           <h2 className="mb-3 font-semibold">Kupovina</h2>
-          {products.map((x) => (
-            <Link key={x.slug} href={`/proizvod/${x.slug}`} className={item}>
-              Komplet, {COLORS[x.color].name.toLowerCase()}
-            </Link>
-          ))}
+          <Link href="/kolekcija" className={item}>
+            Kolekcija
+          </Link>
+          <Link href="/placanje" className={item}>
+            Porudžbina
+          </Link>
         </nav>
         <nav aria-label="Brend">
           <h2 className="mb-3 font-semibold">Brend</h2>

@@ -1,8 +1,8 @@
 import Image from "next/image";
 import Link from "next/link";
 import { CherryMark } from "@/components/Logo";
-import { ProductCard } from "@/components/ProductCard";
-import { FABRIC, INSTAGRAM, REVIEWS, products as sets } from "@/lib/products";
+import { ProductGrid } from "@/components/ProductGrid";
+import { FABRIC, INSTAGRAM, REVIEWS } from "@/lib/products";
 
 function Hero() {
   return (
@@ -46,11 +46,7 @@ export default function Home() {
             Prva kolekcija
           </h2>
         </div>
-        <div className="reveal-grid grid grid-cols-2 gap-x-3 gap-y-10 md:gap-x-6 md:gap-y-14 lg:grid-cols-3">
-          {sets.map((product) => (
-            <ProductCard key={product.slug} product={product} />
-          ))}
-        </div>
+        <ProductGrid />
         <div className="mt-12 text-center">
           <Link href="/kolekcija" className="btn btn-quiet">
             Pogledaj celu kolekciju
