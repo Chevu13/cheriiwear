@@ -1,0 +1,235 @@
+@import "tailwindcss";
+
+@theme inline {
+  --color-ivory: #faf6f0;
+  --color-paper: #fffdfa;
+  --color-blush: #f8cdd2;
+  --color-blush-soft: #fbe9e8;
+  --color-cherry: #8c1123;
+  --color-ink: #2a2526;
+  --color-mute: #6f6565;
+  --color-line: #e3d9d0;
+  --font-display: var(--font-anton), "Arial Narrow", sans-serif;
+  --font-sans: var(--font-instrument), system-ui, sans-serif;
+}
+
+/* page gutter + max width; a utility so it can take breakpoint variants */
+@utility wrap {
+  margin-inline: auto;
+  max-width: 82rem;
+  padding-inline: 1.125rem;
+  @media (min-width: 768px) {
+    padding-inline: 2.5rem;
+  }
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 5rem; /* keep focused and anchored content clear of the sticky header */
+    -webkit-tap-highlight-color: transparent;
+  }
+  /* lock page scroll behind the cart, menu and size guide */
+  html:has(dialog[open]) {
+    overflow: hidden;
+  }
+  body {
+    background: var(--color-ivory);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+  }
+  :focus-visible {
+    outline: 2px solid var(--color-cherry);
+    outline-offset: 3px;
+  }
+  button,
+  summary,
+  label[for] {
+    cursor: pointer;
+    touch-action: manipulation;
+  }
+  summary::-webkit-details-marker {
+    display: none;
+  }
+}
+
+@layer components {
+  /* Logotype face: tall condensed caps, as on the brand's own artwork */
+  .display {
+    font-family: var(--font-display);
+    text-transform: uppercase;
+    line-height: 1.04; /* room for Š Č Ž Ć above the caps */
+    letter-spacing: 0.01em;
+    text-wrap: balance;
+  }
+
+  /* Buttons carry the garment's signature: a fine contrast piping set in from the edge */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 3.25rem;
+    padding: 0 1.75rem;
+    background: var(--color-ink);
+    color: var(--color-ivory);
+    font-weight: 600;
+    font-size: 0.9375rem;
+    box-shadow:
+      inset 0 0 0 4px var(--color-ink),
+      inset 0 0 0 5px var(--color-ivory);
+    transition: background-color 0.2s;
+  }
+  .btn:hover {
+    background: var(--color-cherry);
+    box-shadow:
+      inset 0 0 0 4px var(--color-cherry),
+      inset 0 0 0 5px var(--color-ivory);
+  }
+  .btn-quiet {
+    background: transparent;
+    color: var(--color-ink);
+    box-shadow: inset 0 0 0 1px var(--color-ink);
+  }
+  .btn-quiet:hover {
+    background: var(--color-ink);
+    color: var(--color-ivory);
+    box-shadow: inset 0 0 0 1px var(--color-ink);
+  }
+
+  .link {
+    text-decoration: underline;
+    text-underline-offset: 0.3em;
+    text-decoration-thickness: 1px;
+  }
+  .link:hover {
+    color: var(--color-cherry);
+  }
+
+  /* The crossover waistband, borrowed as an edge for photos and colour bands */
+  .v-bottom {
+    clip-path: polygon(0 0, 100% 0, 100% calc(100% - 2.75rem), 38% 100%, 0 calc(100% - 1.25rem));
+  }
+  .v-top {
+    clip-path: polygon(0 1.25rem, 38% 2.75rem, 100% 0, 100% 100%, 0 100%);
+  }
+
+  .field {
+    width: 100%;
+    min-height: 3.25rem;
+    padding: 0.75rem 0.875rem;
+    background: var(--color-paper);
+    border: 1px solid var(--color-line);
+    font-size: 1rem; /* 16px keeps iOS from zooming on focus */
+  }
+  .field:focus {
+    border-color: var(--color-ink);
+  }
+
+  .snap-row {
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+    overscroll-behavior-x: contain;
+  }
+  .snap-row > * {
+    scroll-snap-align: start;
+    flex: none;
+  }
+
+  /* Native <dialog> drawers and sheets */
+  dialog {
+    color: var(--color-ink);
+    background: var(--color-ivory);
+    max-width: none;
+    max-height: none;
+    overscroll-behavior: contain;
+    transition:
+      translate 0.32s cubic-bezier(0.2, 0.8, 0.2, 1),
+      opacity 0.32s,
+      overlay 0.32s allow-discrete,
+      display 0.32s allow-discrete;
+  }
+  dialog::backdrop {
+    background: rgb(42 37 38 / 0.45);
+    transition:
+      opacity 0.32s,
+      overlay 0.32s allow-discrete,
+      display 0.32s allow-discrete;
+  }
+  dialog:not([open]),
+  dialog:not([open])::backdrop {
+    opacity: 0;
+  }
+  @starting-style {
+    dialog[open],
+    dialog[open]::backdrop {
+      opacity: 0;
+    }
+  }
+  .drawer {
+    margin: 0 0 0 auto;
+    width: min(100%, 27rem);
+    height: 100dvh;
+  }
+  .drawer:not([open]) {
+    translate: 100% 0;
+  }
+  .drawer-left {
+    margin: 0 auto 0 0;
+  }
+  .drawer-left:not([open]) {
+    translate: -100% 0;
+  }
+  @starting-style {
+    .drawer[open] {
+      translate: 100% 0;
+    }
+    .drawer-left[open] {
+      translate: -100% 0;
+    }
+  }
+  .sheet {
+    margin: auto auto 0;
+    width: min(100%, 34rem);
+    max-height: 92dvh;
+  }
+  @media (min-width: 768px) {
+    .sheet {
+      margin: auto;
+    }
+  }
+
+  /* The one orchestrated moment: the headline rises on first load */
+  .rise > * {
+    animation: rise 0.9s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+  }
+  .rise > :nth-child(2) {
+    animation-delay: 0.08s;
+  }
+  .rise > :nth-child(3) {
+    animation-delay: 0.16s;
+  }
+  .rise > :nth-child(4) {
+    animation-delay: 0.3s;
+  }
+  .rise > :nth-child(5) {
+    animation-delay: 0.38s;
+  }
+  @keyframes rise {
+    from {
+      opacity: 0;
+      translate: 0 1.5rem;
+    }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  ::backdrop {
+    animation: none !important;
+    transition: none !important;
+    scroll-behavior: auto !important;
+  }
+}
