@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { CartLines } from "@/components/CartLines";
 import { cartTotal, clearCart, useCart, useHydrated, type Line } from "@/lib/cart";
+import { CUSTOMER_FIELDS, addOrder, type Customer } from "@/lib/orders";
 import { COLORS, formatPrice, getProduct } from "@/lib/products";
 
 function Field({ label, className = "", ...input }: { label: string } & React.ComponentProps<"input">) {
@@ -35,8 +36,11 @@ export default function Checkout() {
           Hvala na porudžbini.
         </h1>
         <p className="mt-6 text-lg leading-relaxed">
-          Ovo je bila demo porudžbina. Ništa nije poslato niti naplaćeno, a uneti podaci nisu sačuvani. Na pravom sajtu
-          kupac ovde dobija potvrdu, a CHÉRI WEAR porudžbinu sa svim detaljima, bez dopisivanja.
+          Ovo je bila demo porudžbina. Ništa nije poslato niti naplaćeno, a podaci su sačuvani samo u ovom pregledaču.
+          Na pravom sajtu kupac ovde dobija potvrdu, a CHÉRI WEAR porudžbinu sa svim detaljima, bez dopisivanja.{" "}
+          <Link href="/admin" className="link font-semibold">
+            Pogledaj kako porudžbina izgleda u adminu
+          </Link>
         </p>
         <ul className="mt-8 divide-y divide-line border-y border-line">
           {placed.map((line) => {
@@ -106,6 +110,11 @@ export default function Checkout() {
           className="space-y-10"
           onSubmit={(e) => {
             e.preventDefault(); // demo: nothing leaves the browser
+            const form = new FormData(e.currentTarget);
+            const customer = Object.fromEntries(
+              CUSTOMER_FIELDS.map((field) => [field, String(form.get(field) ?? "").trim()]),
+            ) as Customer;
+            addOrder(customer, lines, cartTotal(lines));
             setPlaced(lines);
             clearCart();
             window.scrollTo(0, 0);
@@ -153,7 +162,7 @@ export default function Checkout() {
               <span className="tabular-nums">{formatPrice(cartTotal(lines))}</span>
             </button>
             <p className="mt-3 text-sm text-mute">
-              Demo: porudžbina se ne šalje, ništa se ne naplaćuje i podaci ostaju samo u tvom pregledaču.
+              Demo: porudžbina se ne šalje i ništa se ne naplaćuje. Podaci se čuvaju samo u tvom pregledaču, da bi se videli u demo adminu.
             </p>
           </div>
         </form>

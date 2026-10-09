@@ -48,6 +48,9 @@ export function Footer() {
           <Link href="/informacije#uslovi" className={item}>
             Uslovi korišćenja
           </Link>
+          <Link href="/admin" className={item}>
+            Admin (demo)
+          </Link>
         </nav>
       </div>
       <div className="wrap border-t border-ivory/15 py-5 text-sm text-ivory/70">

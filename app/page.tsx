@@ -2,7 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { CherryMark } from "@/components/Logo";
 import { ProductCard } from "@/components/ProductCard";
-import { COLORS, FABRIC, INSTAGRAM, formatPrice, products as sets } from "@/lib/products";
+import { FABRIC, INSTAGRAM, REVIEWS, products as sets } from "@/lib/products";
 
 function Hero() {
   return (
@@ -88,36 +88,28 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="pb-14 md:pb-36" aria-labelledby="boje-naslov">
+      <section className="pb-14 md:pb-36" aria-labelledby="utisci-naslov">
         <div className="reveal wrap mb-8 md:mb-12 md:grid md:grid-cols-12 md:gap-x-6">
-          <h2 id="boje-naslov" className="display text-6xl md:col-span-7 md:col-start-6 md:text-8xl">
-            Jedan kroj, tri boje
+          <h2 id="utisci-naslov" className="display text-6xl md:col-span-7 md:col-start-6 md:text-8xl">
+            Utisci naših kupaca
           </h2>
         </div>
         <ul className="reveal snap-row gap-3 px-[1.125rem] md:wrap md:grid md:grid-cols-3 md:gap-6 md:overflow-visible">
-          {sets.map((set, i) => (
-            <li key={set.slug} className={`w-[74%] md:w-auto ${["md:mt-24", "", "md:mt-12"][i]}`}>
-              <Link href={`/proizvod/${set.slug}`} className="group block">
-                <div className="relative aspect-[4/5] overflow-hidden bg-blush-soft">
-                  <Image
-                    src={set.photos[1].src}
-                    alt={set.photos[1].alt}
-                    fill
-                    sizes="(min-width: 768px) 30vw, 74vw"
-                    className="object-cover transition-transform duration-700 group-hover:scale-[1.03]"
-                  />
-                </div>
-                <div className="mt-3 flex items-center justify-between">
-                  <p className="flex items-center gap-2.5 font-semibold">
-                    <span className="size-4 rounded-full" style={{ background: COLORS[set.color].hex }} />
-                    {COLORS[set.color].name}
-                  </p>
-                  <p className="text-mute tabular-nums">Komplet, {formatPrice(set.price)}</p>
-                </div>
-              </Link>
+          {REVIEWS.map((review, i) => (
+            <li key={review.name} className={`w-[82%] md:w-auto ${["md:mt-24", "", "md:mt-12"][i]}`}>
+              <figure className="flex h-full flex-col border-t-2 border-cherry bg-blush-soft p-6 md:p-8">
+                <blockquote className="text-xl leading-relaxed md:text-2xl">„{review.text}“</blockquote>
+                <figcaption className="mt-auto pt-8">
+                  <p className="font-semibold">{review.name}</p>
+                  <p className="text-sm text-mute">{review.item}</p>
+                </figcaption>
+              </figure>
             </li>
           ))}
         </ul>
+        <p className="wrap mt-6 text-sm text-mute">
+          Primeri za demo prezentaciju. Na pravom sajtu ovde stoje utisci stvarnih kupaca.
+        </p>
       </section>
 
       <section className="relative mt-10 md:mt-28" aria-labelledby="srbija-naslov">

@@ -92,7 +92,14 @@ export const SIZE_GUIDE: Record<"Topovi" | "Helanke", { columns: string[]; rows:
 export const sizeLabel = (parts: readonly string[], sizes: readonly string[]) =>
   parts.map((part, i) => (part ? `${part} ${sizes[i]}` : sizes[i])).join(" / ");
 
-export const INSTAGRAM ="https://www.instagram.com/cheriiwear/";
+// DEMO utisci: izmišljeni primeri, zameniti utiscima stvarnih kupaca pre objave.
+export const REVIEWS = [
+  { name: "Ime kupca 1", item: "Komplet, lila", text: "Primer utiska: materijal je mekan, a helanke ostaju na mestu tokom celog treninga." },
+  { name: "Ime kupca 2", item: "Komplet, crna", text: "Primer utiska: veličina odgovara tabeli, a porudžbina je bila gotova za minut." },
+  { name: "Ime kupca 3", item: "Komplet, siva", text: "Primer utiska: nosim ga i na pilatesu i u gradu. Kroj lepo stoji." },
+];
+
+export const INSTAGRAM = "https://www.instagram.com/cheriiwear/";
 
 const rsd = new Intl.NumberFormat("sr-Latn-RS");
 export const formatPrice = (n: number) => `${rsd.format(n)} RSD`;
